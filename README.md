@@ -388,8 +388,11 @@ Now that osTicket is running I can simulate real help desk tickets:
 | Software install request | Deploy via GPO, resolve ticket with notes |
 
 ---
-##Images
+
+## Images
+
 Coming soon!
+
 
 ## Resources
 
