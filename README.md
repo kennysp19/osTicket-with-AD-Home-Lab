@@ -1,6 +1,6 @@
-# osTicket Help Desk Lab — Ubuntu Server + Active Directory
+# osTicket Help Desk Lab Ubuntu Server + Active Directory
 
-This is a documentation of me setting up osTicket in my home Active Directory lab. I'm learning IT and working toward a help desk career, so I wanted to build something that actually mirrors what you'd do on the job — a real ticketing system running in the same environment as my Active Directory domain. This guide covers everything I did, all the errors I ran into, and how I fixed them.
+This is a documentation of me setting up osTicket in my home Active Directory lab. I'm learning IT and working toward a support or help desk role, so I wanted to build something that actually mirrors what you'd do on the job. A real ticketing system running in the same environment as my Active Directory domain. This guide covers everything I did, all the errors I ran into, and how I fixed them.
 
 ---
 
@@ -259,9 +259,9 @@ sudo rm -rf /var/www/html/osticket/setup
 
 ## Phase 7 — LDAP/AD Integration — Skipped
 
-I originally planned to connect osTicket to Active Directory using LDAP so that domain users could log in with their AD credentials automatically. However I ran into issues getting the LDAP plugin and its required libraries to work correctly with osTicket v1.18.1. The plugin kept throwing a `Failed opening required include/Net/LDAP2.php` error that I couldn't resolve — the library wasn't being found even after manually placing it in multiple locations.
+I originally planned to connect osTicket to Active Directory using LDAP so that domain users could log in with their AD credentials automatically. However I ran into issues getting the LDAP plugin and its required libraries to work correctly with osTicket v1.18.1. The plugin kept throwing a `Failed opening required include/Net/LDAP2.php` error that I couldn't resolve. The library wasn't being found even after manually placing it in multiple locations.
 
-Rather than get stuck on this one piece I made the decision to skip it and move forward. LDAP integration is more of a sysadmin level configuration task and for the purposes of this lab — practicing help desk workflows — it isn't required. osTicket works completely fine without it. Users and agents are created manually inside osTicket instead.
+Rather than get stuck on this one piece I made the decision to skip it and move forward. OsTicket works completely fine without it. Users and agents are created manually inside osTicket instead.
 
 This is something I plan to come back to and figure out as I continue building my skills.
 
@@ -321,7 +321,7 @@ I typed the number `1` at the end instead of the lowercase letter `l`. Easy mist
 
 ---
 
-### Apache failed to reload — Syntax error on line 12
+### Apache failed to reload, Syntax error on line 12
 
 The error said it expected `</VirtualHost>` but saw `</VitualHost>`. I had missed the `r` in Virtual. Apache won't start with mismatched tags.
 
@@ -331,7 +331,7 @@ The error said it expected `</VirtualHost>` but saw `</VitualHost>`. I had misse
 
 ### Windows 10 couldn't reach the Apache default page
 
-This took a while to figure out. My Ubuntu VM was on a different subnet than my Windows 10 VM because the DC wasn't on yet. Without the DC there's no DHCP, no routing, and no default gateway — so nothing can communicate.
+This took a while to figure out. My Ubuntu VM was on a different subnet than my Windows 10 VM because the DC wasn't on yet. Without the DC there's no DHCP, no routing, and no default gateway so nothing can communicate.
 
 **Fix:** Always boot the DC first. Once it was running Windows 10 grabbed the right IP and everything was on the same subnet.
 
@@ -353,7 +353,7 @@ This was the error that caused me to skip Phase 7. The LDAP plugin couldn't find
 
 ### osTicket LDAP plugin returning 404 on download
 
-The osTicket plugins repo has no formal releases so all the release tag download URLs return 404. The fix is to download directly from the branch using curl instead of wget.
+The osTicket plugins repo has no formal releases so all the release tag download URLs return 404.
 
 ---
 
@@ -388,6 +388,8 @@ Now that osTicket is running I can simulate real help desk tickets:
 | Software install request | Deploy via GPO, resolve ticket with notes |
 
 ---
+##Images
+Coming soon!
 
 ## Resources
 
