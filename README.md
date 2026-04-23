@@ -1,6 +1,6 @@
 # osTicket Help Desk Lab Ubuntu Server + Active Directory
 
-This is a documentation of me setting up osTicket in my home Active Directory lab. I'm learning IT and working toward a support or help desk role, so I wanted to build something that actually mirrors what you'd do on the job. A real ticketing system running in the same environment as my Active Directory domain. This guide covers everything I did, all the errors I ran into, and how I fixed them.
+This is a documentation of me setting up osTicket in my home Active Directory lab. I'm learning IT and wanted to build something that actually mirrors what you'd do on the job. A real ticketing system running in the same environment as my Active Directory domain. This guide covers everything I did, all the errors I ran into, and how I fixed them.
 
 ---
 
