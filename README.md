@@ -1,1 +1,0 @@
-# osTicket-with-AD-Home-Lab
