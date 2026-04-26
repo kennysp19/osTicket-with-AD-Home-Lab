@@ -125,7 +125,7 @@ sudo apt update && sudo apt upgrade -y
 
 ---
 
-## Phase 3: Install the LAMP Stack
+## Phase 3  Install the LAMP Stack
 
 osTicket needs Apache, MySQL, and PHP to run. Install them all on Ubuntu:
 
@@ -146,7 +146,7 @@ Test it: on your Windows 10 VM open a browser and go to `http://192.168.1.20`. Y
 
 ---
 
-## Phase 4: Set Up the MySQL Database
+## Phase 4  Set Up the MySQL Database
 
 Run this on Ubuntu:
 
@@ -166,7 +166,7 @@ EXIT;
 
 ---
 
-## Phase 5: Install osTicket
+## Phase 5  Install osTicket
 
 ### Download and Extract
 
@@ -227,7 +227,7 @@ sudo systemctl reload apache2
 
 ---
 
-## Phase 6: Run the osTicket Web Installer
+## Phase 6  Run the osTicket Web Installer
 
 1. On your Windows 10 VM go to `http://192.168.1.20/setup`
 2. All PHP extensions should show green checkmarks
@@ -257,7 +257,7 @@ sudo rm -rf /var/www/html/osticket/setup
 
 ---
 
-## Phase 7: LDAP/AD Integration
+## Phase 7  LDAP/AD Integration
 
 I originally planned to connect osTicket to Active Directory using LDAP so that domain users could log in with their AD credentials automatically. However I ran into issues getting the LDAP plugin and its required libraries to work correctly with osTicket v1.18.1. The plugin kept throwing a `Failed opening required include/Net/LDAP2.php` error that I couldn't resolve. The library wasn't being found even after manually placing it in multiple locations.
 
@@ -269,7 +269,7 @@ This is something I plan to come back to and figure out as I continue building m
 
 ---
 
-## Phase 8: Add DNS Record on the Domain Controller
+## Phase 8  Add DNS Record on the Domain Controller
 
 1. On the DC open **DNS Manager**
 2. Expand your domain → **Forward Lookup Zones**
