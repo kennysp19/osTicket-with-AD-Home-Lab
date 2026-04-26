@@ -265,7 +265,7 @@ Rather than get stuck on this one piece I made the decision to skip it and move 
 
 This is something I plan to come back to and figure out as I continue building my skills.
 
-**update** I was actually able to get it working.
+**update:** I was actually able to get it working.
 
 ---
 
