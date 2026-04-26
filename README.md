@@ -20,11 +20,11 @@ This is a documentation of me setting up osTicket in my home Active Directory la
 
 ## Table of Contents
 
-1. [Create the Ubuntu VM](#phase-1-:--create-the-ubuntu-server-vm)
+1. [Create the Ubuntu VM](#phase-1--create-the-ubuntu-server-vm)
 2. [Configure Ubuntu](#phase-2--initial-ubuntu-configuration)
 3. [Install LAMP Stack](#phase-3--install-the-lamp-stack)
 4. [Set Up MySQL Database](#phase-4--set-up-the-mysql-database)
-5. [Install osTicket](#phase-5-:--install-osticket)
+5. [Install osTicket](#phase-5--install-osticket)
 6. [Run the Web Installer](#phase-6--run-the-osticket-web-installer)
 7. [LDAP/AD Integration — Skipped](#phase-7--ldapad-integration)
 8. [Add DNS Record on DC](#phase-8--add-dns-record-on-the-domain-controller)
@@ -34,7 +34,7 @@ This is a documentation of me setting up osTicket in my home Active Directory la
 
 ---
 
-## Phase 1: Create the Ubuntu Server VM
+## Phase 1  Create the Ubuntu Server VM
 
 1. Download **Ubuntu Server 22.04 LTS** from [ubuntu.com/download/server](https://ubuntu.com/download/server)
 2. In VirtualBox click **New** and configure:
@@ -54,7 +54,7 @@ This is a documentation of me setting up osTicket in my home Active Directory la
 
 ---
 
-## Phase 2: Initial Ubuntu Configuration
+## Phase 2  Initial Ubuntu Configuration
 
 ### Set a Static IP
 
