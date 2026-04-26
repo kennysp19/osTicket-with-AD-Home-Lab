@@ -20,7 +20,7 @@ This is a documentation of me setting up osTicket in my home Active Directory la
 
 ## Table of Contents
 
-1. [Create the Ubuntu VM](#phase-1--create-the-ubuntu-server-vm)
+1. [Create the Ubuntu VM](#phase-1:--create-the-ubuntu-server-vm)
 2. [Configure Ubuntu](#phase-2--initial-ubuntu-configuration)
 3. [Install LAMP Stack](#phase-3--install-the-lamp-stack)
 4. [Set Up MySQL Database](#phase-4--set-up-the-mysql-database)
