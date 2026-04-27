@@ -56,6 +56,11 @@ Output showed `Enabled: False`
 
 > When I disabled Ben's account his session on the Windows 10 VM froze immediately. This is realistic — in a real environment a disabled account gets cut off quickly. Ben had to use a coworker's computer to submit his ticket.
 
+<p align="center">
+Account locked out <br/>
+<img src="https://i.imgur.com/xvqM1ak.png" height="30%" width="50%" alt="Disk Sanitization Steps"/>
+
+
 ---
 
 ## Step 3 — Ben Submitted a Ticket
@@ -84,6 +89,12 @@ The confirmation screen showed:
 
 > osTicket didn't display a ticket number on the confirmation screen. The ticket was still created and waiting in the queue.
 
+
+<p align="center">
+Ticket creation <br/>
+<img src="https://i.imgur.com/GDzs9Yy.png" height="30%" width="50%" alt="Disk Sanitization Steps"/>
+
+
 ---
 
 ## Step 4 — Agent Picked Up the Ticket
@@ -107,6 +118,12 @@ In the staff portal I clicked **Tickets** and found Ben's ticket:
 
 I clicked on the ticket to open it and assigned it to myself by selecting my agent name in the Assignee field.
 
+
+<p align="center">
+ <br/>
+<img src="https://i.imgur.com/HKoXu5S.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
 ---
 
 ## Step 5 — Posted an Internal Note
@@ -120,6 +137,13 @@ I wrote:
 Clicked **Post Note.**
 
 > This is something I learned is really important in real help desk work. You always document what you're doing and why before you do it. If another tech picks up the ticket later they can see exactly what happened and what was already tried.
+
+
+<p align="center">
+Documenting before action <br/>
+<img src="https://i.imgur.com/dDS5xCW.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
 
 ---
 
@@ -147,6 +171,15 @@ Get-ADUser -Identity "bshuto" -Properties Enabled | Select Name, Enabled
 
 Output now showed `Enabled: True` — account was active again.
 
+
+<p align="center">
+ <br/>
+<img src="https://i.imgur.com/nKpjtvf.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
+
+
+
 ---
 
 ## Step 7 — Posted a Reply to Ben
@@ -154,6 +187,13 @@ Output now showed `Enabled: True` — account was active again.
 Back in the staff portal I clicked the **Post Reply** tab and wrote a response that Ben would see:
 
 *"Hi Ben, thank you for contacting the help desk. I was able to look into your account and found that it had been disabled. I have gone ahead and re-enabled your account and you should now be able to log into your computer. Please attempt to log in and let us know if you experience any further issues. If your password has expired you will be prompted to set a new one at login. Thank you."*
+
+
+<p align="center">
+ <br/>
+<img src="https://i.imgur.com/vKSfSP8.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
 
 ---
 
@@ -168,6 +208,7 @@ Changed the ticket status to **Resolved** at the same time as posting the reply 
 > osTicket requires something to be written in the reply box before it will let you change the status. It won't close a ticket with an empty response which makes sense. You should always document why you're closing it.
 
 The ticket moved out of the open queue and showed as **Closed** under the Tickets tab.
+
 
 ---
 
