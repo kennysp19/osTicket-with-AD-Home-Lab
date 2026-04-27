@@ -391,10 +391,6 @@ Now that osTicket is running I can simulate real help desk tickets:
 
 ---
 
-## Images
-
-Coming soon!
-
 
 ## Resources
 
