@@ -377,20 +377,6 @@ This project taught me a lot more than just how to install a ticketing system. H
 
 ---
 
-## Help Desk Scenarios to Practice
-
-Now that osTicket is running I can simulate real help desk tickets:
-
-| Ticket | What I Do |
-|---|---|
-| User account locked out | `Unlock-ADAccount -Identity "jsmith"` then close ticket |
-| New hire needs account | Create in AD + create in osTicket, document steps |
-| Password reset request | `Set-ADAccountPassword` + force change at logon |
-| User needs folder access | Modify NTFS/Share permissions, update ticket |
-| Software install request | Deploy via GPO, resolve ticket with notes |
-
----
-
 
 ## Resources
 
