@@ -20,7 +20,7 @@ Ben Shuto is an employee who can't log into his computer. His account was disabl
 
 ---
 
-## Step 1 — Created the Test User in Active Directory
+## Step 1: Created the Test User in Active Directory
 
 On my DC I opened PowerShell as Administrator and created Ben Shuto's account:
 
@@ -37,7 +37,7 @@ Output showed `Enabled: True` confirming the account existed and was active.
 
 ---
 
-## Step 2 — Simulated the Account Lockout
+## Step 2: Simulated the Account Lockout
 
 I disabled Ben's account to simulate him being locked out:
 
@@ -63,7 +63,7 @@ Account locked out <br/>
 
 ---
 
-## Step 3 — Ben Submitted a Ticket
+## Step 3: Ben Submitted a Ticket
 
 On the Windows 10 VM I logged in as a different user to simulate Ben borrowing a coworker's computer. I opened a browser and went to:
 
@@ -97,7 +97,7 @@ Ticket creation <br/>
 
 ---
 
-## Step 4 — Agent Picked Up the Ticket
+## Step 4: Agent Picked Up the Ticket
 
 I opened a new browser tab and went to the staff portal:
 
@@ -126,7 +126,7 @@ I clicked on the ticket to open it and assigned it to myself by selecting my age
 
 ---
 
-## Step 5 — Posted an Internal Note
+## Step 5: Posted an Internal Note
 
 Before touching anything in AD I documented my plan inside the ticket using an Internal Note.
 
@@ -147,7 +147,7 @@ Documenting before action <br/>
 
 ---
 
-## Step 6 — Verified and Fixed the Account in Active Directory
+## Step 6: Verified and Fixed the Account in Active Directory
 
 On my DC I opened PowerShell as Administrator and checked Ben's account status:
 
@@ -182,7 +182,7 @@ Output now showed `Enabled: True` — account was active again.
 
 ---
 
-## Step 7 — Posted a Reply to Ben
+## Step 7: Posted a Reply to Ben
 
 Back in the staff portal I clicked the **Post Reply** tab and wrote a response that Ben would see:
 
@@ -197,7 +197,7 @@ Back in the staff portal I clicked the **Post Reply** tab and wrote a response t
 
 ---
 
-## Step 8 — Closed the Ticket
+## Step 8: Closed the Ticket
 
 To close the ticket I posted one final reply with the status change:
 
@@ -212,7 +212,7 @@ The ticket moved out of the open queue and showed as **Closed** under the Ticket
 
 ---
 
-## Step 9 — Verified the Fix
+## Step 9: Verified the Fix
 
 On the Windows 10 VM I logged in as Ben Shuto using his credentials. He was able to log in successfully confirming the issue was fully resolved.
 
