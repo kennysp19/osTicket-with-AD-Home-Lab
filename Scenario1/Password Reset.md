@@ -1,6 +1,6 @@
-# Help Desk Scenario 2 — Password Reset
+# Help Desk Scenario 2 - Password Reset
 
-This is the second scenario I practiced in my osTicket help desk lab. The goal was to simulate a user forgetting their password and needing a reset — one of the most common help desk tickets in any IT environment. This scenario covers submitting the ticket, resetting the password in Active Directory, forcing a password change at next login, and properly closing the ticket only after confirming the user can log in.
+This is the second scenario I practiced in my osTicket help desk lab. The goal was to simulate a user forgetting their password and needing a reset - one of the most common help desk tickets in any IT environment. This scenario covers submitting the ticket, resetting the password in Active Directory, forcing a password change at next login, and properly closing the ticket only after confirming the user can log in.
 
 ---
 
@@ -12,15 +12,15 @@ Ben Shuto forgot his password and can't log into his computer. Unlike Scenario 1
 
 ## What I Used
 
-- **DC01** — Windows Server 2022 (Active Directory, PowerShell)
-- **SRV-osTicket** — Ubuntu Server 22.04 (osTicket running on Apache/MySQL/PHP)
-- **PC01** — Windows 10 (end user machine)
-- **osTicket Staff Portal** — `http://192.168.1.20/scp`
-- **osTicket End User Portal** — `http://192.168.1.20`
+- **DC01** - Windows Server 2022 (Active Directory, PowerShell)
+- **SRV-osTicket** - Ubuntu Server 22.04 (osTicket running on Apache/MySQL/PHP)
+- **PC01** - Windows 10 (end user machine)
+- **osTicket Staff Portal** - `http://192.168.1.20/scp`
+- **osTicket End User Portal** - `http://192.168.1.20`
 
 ---
 
-## Step 1 — Verified Ben's Account Was Active
+## Step 1 - Verified Ben's Account Was Active
 
 Before starting I confirmed Ben's account from Scenario 1 was still enabled:
 
@@ -28,7 +28,7 @@ Before starting I confirmed Ben's account from Scenario 1 was still enabled:
 Get-ADUser -Identity "bshuto" -Properties Enabled | Select Name, Enabled
 ```
 
-Output showed `Enabled: True` — account was active and ready.
+Output showed `Enabled: True` - account was active and ready.
 
 <p align="center">
 <br/>
@@ -36,7 +36,7 @@ Output showed `Enabled: True` — account was active and ready.
   
 ---
 
-## Step 2 — Ben Submitted a Ticket
+## Step 2 - Ben Submitted a Ticket
 
 On the Windows 10 VM I went to the end user portal:
 
@@ -69,7 +69,7 @@ Ticket creation <br/>
 
 ---
 
-## Step 3 — Agent Picked Up the Ticket
+## Step 3 - Agent Picked Up the Ticket
 
 I went to the staff portal:
 
@@ -90,9 +90,9 @@ Clicked into the ticket and assigned it to myself.
 
 ---
 
-## Step 4 — Posted an Internal Note
+## Step 4 - Posted an Internal Note
 
-Before making any changes in AD I documented my plan in an Internal Note — visible to agents only, Ben can't see this:
+Before making any changes in AD I documented my plan in an Internal Note.
 
 *"Received ticket from Ben Shuto reporting he has forgotten his password and cannot log into his computer. Account appears to be active and enabled. Will reset password in Active Directory and force password change at next login."*
 
@@ -108,7 +108,7 @@ Clicked **Post Note.**
 
 ---
 
-## Step 5 — Reset Ben's Password in Active Directory
+## Step 5 - Reset Ben's Password in Active Directory
 
 On my DC I opened PowerShell as Administrator.
 
@@ -150,7 +150,7 @@ Output showed:
 
 ---
 
-## Step 6 — Posted a Reply to Ben and Set Status to Pending
+## Step 6 - Posted a Reply to Ben and Set Status to Pending
 
 Back in the staff portal I clicked **Post Reply** on ticket **#685633** and wrote:
 
@@ -165,7 +165,7 @@ I left the ticket Open instead of Resolved right away because I wanted to wait f
 
 ---
 
-## Step 7 — Verified the Fix on Windows 10
+## Step 7 - Verified the Fix on Windows 10
 
 On the Windows 10 VM I logged in as Ben Shuto using the temporary password:
 
@@ -201,7 +201,7 @@ Windows immediately prompted Ben to set a new password. I set a new password and
 
 ---
 
-## Step 8 — Closed the Ticket
+## Step 8 - Closed the Ticket
 
 Back in the staff portal I posted a final closing note on ticket **#685633:**
 
@@ -282,7 +282,7 @@ Set-ADAccountPassword -Identity "bshuto" -Reset -NewPassword $newpassword
 
 ## What I Learned From This Scenario
 
-**Don't close the ticket until the fix is confirmed.** After resetting the password I set the ticket to Pending instead of immediately resolving it. I only closed it after logging in as Ben and confirming he could set a new password and get in. That's the professional way to handle it — the fix isn't done until the user confirms it works.
+**Don't close the ticket until the fix is confirmed.** After resetting the password I set the ticket to Pending instead of immediately resolving it. I only closed it after logging in as Ben and confirming he could set a new password and get in. That's the professional way to handle it - the fix isn't done until the user confirms it works.
 
 
 **SecureString is a security feature not a bug.** PowerShell requires passwords to be passed as SecureString objects to prevent plain text passwords from being exposed in logs or command history. Understanding why that requirement exists is just as important as knowing how to work around it.
