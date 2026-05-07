@@ -6,7 +6,7 @@ This is the second scenario I practiced in my osTicket help desk lab. The goal w
 
 ## The Situation
 
-Ben Shuto forgot his password and can't log into his computer. Unlike Scenario 1 his account is active and enabled — he just doesn't know his password. He needs the help desk to reset it to a temporary password and he'll set his own new password when he logs in.
+Ben Shuto forgot his password and can't log into his computer. Unlike Scenario 1 his account is active and enabled, he just doesn't know his password. He needs the help desk to reset it to a temporary password and he'll set his own new password when he logs in.
 
 ---
 
@@ -30,6 +30,10 @@ Get-ADUser -Identity "bshuto" -Properties Enabled | Select Name, Enabled
 
 Output showed `Enabled: True` — account was active and ready.
 
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/c0kozKa.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+  
 ---
 
 ## Step 2 — Ben Submitted a Ticket
@@ -53,6 +57,15 @@ Clicked **Open a New Ticket** and filled it out as Ben:
 Clicked **Create Ticket.**
 
 The confirmation screen showed a green banner stating the ticket request was created along with a thank you message from the support team.
+
+<p align="center">
+Ticket creation <br/>
+<img src="https://i.imgur.com/gdMkABu.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/t0u83i8.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
 
 ---
 
@@ -86,6 +99,12 @@ Before making any changes in AD I documented my plan in an Internal Note — vis
 Clicked **Post Note.**
 
 > Always document what you're going to do before you do it. If another tech picks up this ticket later they can see exactly what was done and why.
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/4ENEcf5.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
 
 ---
 
@@ -121,7 +140,13 @@ Output showed:
 - **PasswordExpired: True**
 - **PasswordLastSet: (empty)**
 
-> This is expected and correct behavior. When you force a password change at next logon Active Directory sets PasswordLastSet to 0 internally which shows as empty when queried. It doesn't mean something went wrong — it means AD has flagged the account to require a password change at next login. PasswordLastSet will update to the current date and time once Ben sets his new password.
+> This is expected and correct behavior. When you force a password change at next logon Active Directory sets PasswordLastSet to 0 internally which shows as empty when queried. It doesn't mean something went wrong, it means AD has flagged the account to require a password change at next login. PasswordLastSet will update to the current date and time once Ben sets his new password.
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/rwohgZA.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
 
 ---
 
@@ -131,9 +156,12 @@ Back in the staff portal I clicked **Post Reply** on ticket **#685633** and wrot
 
 *"Hi Ben, thank you for contacting the help desk. I have reset your password. Your temporary password is Newtemp123! Please log into your computer using this temporary password and you will be prompted to create a new one immediately. Please make sure your new password meets the company password requirements. Let us know if you have any issues logging in. Thank you."*
 
-I changed the ticket status to **Pending** instead of Resolved right away because I wanted to wait for Ben to confirm the fix worked before closing it out.
+I left the ticket Open instead of Resolved right away because I wanted to wait for Ben to confirm the fix worked before closing it out.
 
-> Best practice is to set the ticket to Pending after sending the fix to the user. This means you're waiting on them to confirm it worked. Only resolve and close the ticket after the issue is fully confirmed — not just after you made the change in AD.
+> Best practice is to set the ticket to Pending after sending the fix to the user. This means you're waiting on them to confirm it worked. Only resolve and close the ticket after the issue is fully confirmed. Not just after you made the change in AD.
+
+
+
 
 ---
 
@@ -146,6 +174,31 @@ On the Windows 10 VM I logged in as Ben Shuto using the temporary password:
 
 Windows immediately prompted Ben to set a new password. I set a new password and Ben was able to log in successfully.
 
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/NFr7UGM.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/hUAwJYW.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/UtNkIzj.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/lzjBOJU.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/VgZIHKl.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
 ---
 
 ## Step 8 — Closed the Ticket
@@ -155,6 +208,17 @@ Back in the staff portal I posted a final closing note on ticket **#685633:**
 *"Verified Ben was able to log in successfully with the temporary password and set a new password. Issue fully resolved."*
 
 Changed the ticket status to **Resolved** and posted the reply. Ticket closed.
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/Twt4kLH.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/aW4EsMT.png" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
 
 ---
 
@@ -196,7 +260,7 @@ Get-ADUser -Identity "bshuto" -Properties PasswordExpired, PasswordLastSet | Sel
 
 ## Error I Hit
 
-### Cannot bind parameter NewPassword — cannot convert System.String to System.Security.SecureString
+### Cannot bind parameter NewPassword - cannot convert System.String to System.Security.SecureString
 
 When I first tried running `Set-ADAccountPassword` with the password typed directly into the command PowerShell threw this error:
 
@@ -205,7 +269,7 @@ Cannot bind parameter 'NewPassword'. Cannot convert the "Newtemp123!" value
 of type "System.String" to type "System.Security.SecureString"
 ```
 
-**What caused it:** `Set-ADAccountPassword` requires the password to be passed as a SecureString object — not plain text. Typing it directly into the command passes it as a regular string which PowerShell can't convert automatically.
+**What caused it:** `Set-ADAccountPassword` requires the password to be passed as a SecureString object - not plain text. Typing it directly into the command passes it as a regular string which PowerShell can't convert automatically.
 
 **How I fixed it:** Stored the password in a variable first using `ConvertTo-SecureString` which converts it to the right format, then passed that variable to `Set-ADAccountPassword`:
 
@@ -220,10 +284,9 @@ Set-ADAccountPassword -Identity "bshuto" -Reset -NewPassword $newpassword
 
 **Don't close the ticket until the fix is confirmed.** After resetting the password I set the ticket to Pending instead of immediately resolving it. I only closed it after logging in as Ben and confirming he could set a new password and get in. That's the professional way to handle it — the fix isn't done until the user confirms it works.
 
-**Pending status exists for a reason.** Setting a ticket to Pending means you're waiting on something — in this case waiting for the user to confirm. It keeps the ticket open and visible without it sitting in the active queue. That's an important distinction from Resolved.
 
 **SecureString is a security feature not a bug.** PowerShell requires passwords to be passed as SecureString objects to prevent plain text passwords from being exposed in logs or command history. Understanding why that requirement exists is just as important as knowing how to work around it.
 
-**PasswordLastSet being empty is expected.** I initially thought something went wrong when the verification showed PasswordLastSet as empty after forcing a password change. It's actually correct behavior — AD sets it to 0 internally to flag the account for a required password change. It updates automatically when the user sets their new password.
+**PasswordLastSet being empty is expected.** I initially thought something went wrong when the verification showed PasswordLastSet as empty after forcing a password change. It's actually correct behavior, AD sets it to 0 internally to flag the account for a required password change. It updates automatically when the user sets their new password.
 
 **Password resets are the most common help desk ticket.** Almost every help desk job will have password resets as a daily task. Knowing how to do it properly in AD, force a change at next login, and communicate the temporary password to the user clearly and professionally is a core skill.
