@@ -30,9 +30,16 @@ Before starting the scenario I set up the shared folder and confirmed the securi
 
 I created a folder called `Finance` on the DC desktop. In a real environment this would be on a dedicated file server but for the lab the desktop works fine.
 
+<p align="center">
+<br/>
+<img src="https://i.imgur.com/mP3neTp.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
 ### Verified the Finance-Users Security Group Existed
 
 I already had a `Finance-Users` security group in AD from previous lab work. I confirmed it was there by opening **Active Directory Users and Computers** and finding it in the list.
+
+<p align="center">
+<img src="https://i.imgur.com/FD4fbfx.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
 
 ---
 
@@ -73,6 +80,23 @@ Logged into the staff portal as **Kenny Panyavong** and found the ticket:
 
 Clicked into the ticket and assigned it to myself.
 
+
+<p align="center">
+<img src="https://i.imgur.com/0pwnba7.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/EXl8ui8.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+<img src="https://i.imgur.com/e8yUOVA.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+<img src="https://i.imgur.com/eRHBYnz.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+
+
 ---
 
 ## Step 3 — Posted an Internal Note
@@ -82,6 +106,11 @@ Before touching anything I posted an Internal Note titled **"Onboarding Document
 *"Received new hire request from Joe Client (manager) for Sarah Jones starting Monday. Action items: 1) Create AD user account for Sarah Jones. 2) Add her to the Finance-Users security group. 3) Grant access to the Finance shared folder. 4) Verify she can log in. Will work through each item and document steps."*
 
 > Posting an internal note before starting is important. It documents the plan, shows what actions need to be taken, and gives other techs full context if the ticket gets reassigned.
+
+
+<p align="center">
+<img src="https://i.imgur.com/prJUtgi.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
 
 ---
 
@@ -103,6 +132,16 @@ After creating the account I right-clicked Sarah's account and confirmed it was 
 
 > I did everything through the GUI for this scenario instead of PowerShell just to mix things up and practice both methods. In a real help desk environment either is perfectly acceptable. The GUI is straightforward for single account creation and gives you a clear visual confirmation of everything you set.
 
+<p align="center">
+<img src="https://i.imgur.com/8RXIm5X.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/VguBwcW.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/fVx2iTg.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+
 ---
 
 ## Step 5 — Added Sarah to the Finance-Users Security Group
@@ -116,6 +155,17 @@ I added Sarah to the Finance-Users group through the GUI:
 5. Clicked **Apply → OK**
 
 Confirmed Sarah was listed as a member of Finance-Users by checking the Members tab in the group properties.
+
+<p align="center">
+<img src="https://i.imgur.com/sF1oRlC.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/pMadSLn.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/7hueAJR.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+
 
 ---
 
@@ -149,6 +199,13 @@ The network path for the shared folder was:
 \\DC\Users\a-kpanyavong\Desktop\Finance\Finance
 ```
 
+<p align="center">
+<img src="https://i.imgur.com/DlyWPez.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/OmB6Ohk.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+
 ---
 
 ## Step 7 — Verified Sarah Could Access Everything
@@ -165,6 +222,27 @@ I opened **File Explorer** and navigated to the network path:
 
 Sarah was able to access the Finance folder and see the contents. I had placed a text file in the folder when I created it to confirm the contents were visible — it showed up successfully confirming access was working correctly.
 
+
+<p align="center">
+<img src="https://i.imgur.com/GmjQTQ6.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/fya3VOO.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/NWxGXN7.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/wu6RvXC.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/rP7ISRg.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+<img src="https://i.imgur.com/zL32kj9.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
+
+
+
 ---
 
 ## Step 8 — Posted Reply to Joe and Closed the Ticket
@@ -179,6 +257,9 @@ Then posted a final **Internal Note** summarizing everything that was done:
 
 
 Changed status to **Resolved** and posted the reply. Ticket closed.
+
+<p align="center">
+<img src="https://i.imgur.com/KEBwQb9.png" height="60%" width="60%" alt="Disk Sanitization Steps"/>
 
 ---
 
