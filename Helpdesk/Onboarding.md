@@ -169,13 +169,14 @@ Sarah was able to access the Finance folder and see the contents. I had placed a
 
 ## Step 8 — Posted Reply to Joe and Closed the Ticket
 
-Back in the staff portal I first posted a final **Internal Note** summarizing everything that was done:
+Back in the staff portal I first posted a **Reply to Joe Client:** 
+
+*"Hi Joe, I have completed the onboarding setup for Sarah Jones. Here is a summary of everything that was done: A domain account has been created for Sarah Jones (username: sjones). Her account has been added to the Finance-Users security group. She has been granted Read and Write access to the Finance shared folder at \\DC01\Finance. Her account is set to require a password change at first login for security purposes. Sarah should be all set for Monday. Please have her log into her computer and change her password when she arrives. Let us know if anything else is needed. Thank you."*
+
+Then posted a final **Internal Note** summarizing everything that was done:
 
 *"Onboarding complete for Sarah Jones. AD account created (sjones), added to Finance-Users security group, granted Read and Write access to Finance shared folder at \\DC01\Finance. Account verified working on Windows 10 VM — Sarah was able to log in, change password, and access the Finance folder successfully. Ticket resolved."*
 
-Then posted a **Reply to Joe Client:**
-
-*"Hi Joe, I have completed the onboarding setup for Sarah Jones. Here is a summary of everything that was done: A domain account has been created for Sarah Jones (username: sjones). Her account has been added to the Finance-Users security group. She has been granted Read and Write access to the Finance shared folder at \\DC01\Finance. Her account is set to require a password change at first login for security purposes. Sarah should be all set for Monday. Please have her log into her computer and change her password when she arrives. Let us know if anything else is needed. Thank you."*
 
 Changed status to **Resolved** and posted the reply. Ticket closed.
 
