@@ -26,7 +26,7 @@ This is a documentation of me setting up osTicket in my home Active Directory la
 4. [Set Up MySQL Database](#phase-4--set-up-the-mysql-database)
 5. [Install osTicket](#phase-5--install-osticket)
 6. [Run the Web Installer](#phase-6--run-the-osticket-web-installer)
-7. [LDAP/AD Integration — Skipped](#phase-7--ldapad-integration)
+7. [LDAP/AD Integration](#phase-7--ldapad-integration)
 8. [Add DNS Record on DC](#phase-8--add-dns-record-on-the-domain-controller)
 9. [Manual User Setup in osTicket](#manual-user-setup-in-osticket)
 10. [Errors I Hit and How I Fixed Them](#errors-i-hit-and-how-i-fixed-them)
