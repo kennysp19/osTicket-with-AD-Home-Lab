@@ -259,11 +259,306 @@ sudo rm -rf /var/www/html/osticket/setup
 
 ## Phase 7  LDAP/AD Integration
 
-I originally planned to connect osTicket to Active Directory using LDAP so that domain users could log in with their AD credentials automatically. However I ran into issues getting the LDAP plugin and its required libraries to work correctly with osTicket v1.18.1. The plugin kept throwing a `Failed opening required include/Net/LDAP2.php` error that I couldn't resolve. The library wasn't being found even after manually placing it in multiple locations.
+This is the part I almost gave up on. I originally skipped LDAP integration because I kept running into errors I couldn't figure out. But I came back to it and eventually got it working. This documents everything I did, every error I hit, and exactly what fixed it.
 
-Rather than get stuck on this one piece I made the decision to skip it and move forward. OsTicket works completely fine without it. Users and agents are created manually inside osTicket instead.
+The idea behind LDAP is that instead of creating separate accounts inside osTicket for every user, osTicket talks directly to Active Directory. When someone logs in with their domain username and password osTicket checks with the DC to verify it. Way cleaner than managing two separate sets of accounts.
 
-This is something I plan to come back to and figure out as I continue building my skills.
+---
+
+## Step 1 — Install the LDAP Plugin
+
+The LDAP plugin isn't included with osTicket by default. I had to download it separately. The official download links on the osTicket plugins repo kept returning 404 errors because the repo has no formal releases at all. I eventually got it working by downloading directly from the branch using curl on Ubuntu:
+
+```bash
+cd /tmp
+curl -L "https://github.com/osTicket/osTicket-plugins/zipball/develop" -o plugins.zip
+unzip plugins.zip
+ls
+```
+
+That created a folder with a long random name like `osTicket-osTicket-plugins-a1b2c3d`. I moved the auth-ldap folder from it into the osTicket plugins directory:
+
+```bash
+sudo mv osTicket-osTicket-plugins-*/auth-ldap /var/www/html/osticket/include/plugins/
+sudo chown -R www-data:www-data /var/www/html/osticket/include/plugins/auth-ldap
+sudo systemctl restart apache2
+```
+
+---
+
+## Step 2 — Install the Net_LDAP2 Library
+
+When I tried to configure the plugin I kept getting this error:
+
+```
+Failed opening required 'include/Net/LDAP2.php'
+```
+
+The plugin needs a PHP library called Net_LDAP2 that wasn't bundled with it. I downloaded it manually on Ubuntu:
+
+```bash
+cd /tmp
+wget https://github.com/pear/Net_LDAP2/archive/refs/heads/master.zip -O ldap2.zip
+unzip ldap2.zip
+sudo mkdir -p /var/www/html/osticket/include/plugins/auth-ldap/include/Net
+sudo cp -r Net_LDAP2-master/Net/LDAP2.php /var/www/html/osticket/include/plugins/auth-ldap/include/Net/
+sudo cp -r Net_LDAP2-master/Net/LDAP2 /var/www/html/osticket/include/plugins/auth-ldap/include/Net/
+sudo chown -R www-data:www-data /var/www/html/osticket/include/plugins/
+sudo systemctl restart apache2
+```
+
+---
+
+## Error — PHP Fatal Error: Cannot Redeclare Class Net_LDAP2
+
+While trying to fix the LDAP2.php error I made it worse by copying the library into multiple locations. PHP started loading it twice and the whole site crashed with a 500 error:
+
+```
+PHP Fatal error: Cannot redeclare class Net_LDAP2 (previously declared in
+/var/www/html/osticket/include/plugins/auth-ldap/include/Net/LDAP2.php:57)
+in /var/www/html/osticket/include/Net/LDAP2.php on line 57
+```
+
+The fix was to remove all the duplicate copies and leave it only in the plugin's own folder:
+
+```bash
+sudo rm -rf /var/www/html/osticket/include/Net
+sudo rm -rf /var/www/html/osticket/include/pear/Net
+sudo systemctl restart apache2
+```
+
+Verified only one copy existed:
+
+```bash
+find /var/www/html/osticket -name "LDAP2.php"
+```
+
+Output showed only one result:
+
+```
+/var/www/html/osticket/include/plugins/auth-ldap/include/Net/LDAP2.php
+```
+
+That's exactly where it needed to be.
+
+---
+
+## Step 3 — Install and Enable the Plugin in osTicket
+
+On my Windows 10 VM I went to:
+
+```
+http://192.168.1.20/scp/plugins.php
+```
+
+The LDAP Authentication and Lookup plugin showed up in the list:
+
+```
+LDAP Authentication and Lookup — Version 0.6.2 — Installed: 4/21/26
+```
+
+Clicked **Install** then **Enable** to activate it.
+
+---
+
+## Step 4 — Create a Dedicated Service Account on the DC
+
+Before configuring the LDAP instance I created a dedicated AD account for osTicket to use when connecting to the DC. You never want to use your main admin account for this — a dedicated service account with minimal permissions is the right way to do it.
+
+On my DC in PowerShell as Administrator:
+
+```powershell
+New-ADUser -Name "osTicket Service" -SamAccountName "svc-osticket" -UserPrincipalName "svc-osticket@mydomain.com" -PasswordNeverExpires $true -Enabled $false
+```
+
+```powershell
+Set-ADAccountPassword -Identity "svc-osticket" -Reset -NewPassword (Read-Host -AsSecureString "New Password")
+```
+
+```powershell
+Enable-ADAccount -Identity "svc-osticket"
+```
+
+Verified the account was created and enabled:
+
+```powershell
+Get-ADUser -Identity "svc-osticket" -Properties Enabled | Select Name, Enabled
+```
+
+Output showed `Enabled: True`
+
+> My DC kept freezing while running these commands. If that happens it's a resource issue — shut down the DC VM and increase the RAM to at least 3GB and CPU to 2 cores in VirtualBox settings. Also make sure PowerShell is always opened as Administrator on the DC or you'll get Access Denied errors.
+
+---
+
+## Step 5 — Configure the LDAP Instance in osTicket
+
+In osTicket I went to:
+
+**Admin Panel → Manage → Plugins → LDAP Authentication and Lookup → Instances → Add New Instance**
+
+Filled in the following settings:
+
+| Field | Value |
+|---|---|
+| **Default Domain** | `mydomain.com` |
+| **DNS Servers** | *(left blank)* |
+| **LDAP Servers** | `192.168.1.10` |
+| **Use TLS** | Unchecked |
+| **Search User** | `svc-osticket@mydomain.com` |
+| **Password** | svc-osticket account password |
+| **Search Base** | `DC=mydomain,DC=com` |
+| **LDAP Schema** | Active Directory |
+| **Staff Authentication** | ✅ Enabled |
+| **Client Authentication** | ✅ Enabled |
+
+> For the Search Base just split your domain name at every dot and put `DC=` in front of each part separated by commas. So `mydomain.com` becomes `DC=mydomain,DC=com`. If your domain was `lab.local` it would be `DC=lab,DC=local`.
+
+> Leave DNS Servers blank. Since Windows 10 is already connected to the DC and resolving DNS correctly the plugin will find the DC automatically using the Default Domain field.
+
+---
+
+## Error — Unable to Connect to LDAP Server
+
+When I first tried saving the instance I got this error:
+
+```
+Unable to connect any listed LDAP servers
+Bind failed: Can't contact LDAP server: Unable to bind to server 192.168.1.10
+```
+
+In my case this was caused by my DC being frozen — not a configuration problem at all. After rebooting the DC the connection issue went away.
+
+> Always check that your DC is fully booted and responding before troubleshooting LDAP connection errors. A frozen or unresponsive DC will cause this error even if your config is perfectly correct.
+
+---
+
+## Step 6 — Test the LDAP Connection From Ubuntu
+
+Before saving the instance I tested the connection directly from Ubuntu using ldap-utils to confirm everything was working at the network level:
+
+```bash
+sudo apt install ldap-utils -y
+```
+
+```bash
+ldapsearch -x -H ldap://192.168.1.10 -D "svc-osticket@mydomain.com" -W -b "DC=mydomain,DC=com"
+```
+
+It prompted me for the svc-osticket password.
+
+First attempt returned **Invalid credentials** — I had forgotten the password I set for the service account. I reset it on the DC:
+
+```powershell
+Set-ADAccountPassword -Identity "svc-osticket" -Reset -NewPassword (Read-Host -AsSecureString "New Password")
+Enable-ADAccount -Identity "svc-osticket"
+```
+
+Ran ldapsearch again with the new password. This time it returned a full list of AD objects confirming LDAP was working correctly.
+
+---
+
+## Step 7 — Update Password in osTicket and Save
+
+Went back to the LDAP instance in osTicket, updated the password field with the new svc-osticket password and clicked save.
+
+**Result: Instance updated successfully.**
+
+LDAP was finally connected.
+
+---
+
+## Step 8 — Add AD Users as Staff Agents
+
+LDAP handles authentication — checking if the username and password are correct. But osTicket still needs to know who each agent is and what role and department they have. Just because LDAP is connected doesn't mean every AD user can automatically log in.
+
+To add an AD user as a staff agent:
+
+1. Log into `http://192.168.1.20/scp`
+2. Go to **Admin Panel → Agents → Add New Agent**
+3. Fill in:
+
+| Field | Value |
+|---|---|
+| **First Name** | user's first name |
+| **Last Name** | user's last name |
+| **Email** | their AD email |
+| **Username** | their AD username exactly as it appears in AD |
+
+4. Uncheck **Send a password reset email** and **Require password change at next login**
+5. Click the **Access** tab and assign a **Department** and **Role**
+6. Click **Create Agent**
+
+That agent can now log into `http://192.168.1.20/scp` using their AD username and password.
+
+---
+
+## End User Login
+
+End users log in through a completely different portal than staff agents:
+
+| Portal | URL | Who Uses It |
+|---|---|---|
+| **Staff/Agent** | `http://192.168.1.20/scp` | Help desk agents and admins |
+| **End User** | `http://192.168.1.20` | Regular users submitting tickets |
+
+For end users to log in with their AD credentials make sure **Client Authentication** is enabled in the LDAP instance settings. If they still can't get in add them manually:
+
+1. Go to **Admin Panel → Users → Add New User**
+2. Enter their AD email and username
+3. They can now log in at `http://192.168.1.20`
+
+---
+
+## Errors I Hit and How I Fixed Them
+
+### Failed opening required include/Net/LDAP2.php
+
+The LDAP plugin needed the Net_LDAP2 PHP library which wasn't bundled with it. Downloaded it manually from GitHub and placed it inside the plugin's include folder.
+
+---
+
+### PHP Fatal Error: Cannot Redeclare Class Net_LDAP2 — HTTP 500 Error
+
+Copied the library into too many locations trying to fix the above error. PHP was loading it twice and crashing the whole site. Fixed by removing all duplicate copies and leaving the library only in the plugin's own folder.
+
+---
+
+### Unable to Connect to LDAP Server — Bind Failed
+
+My DC was frozen. Rebooted it and the error went away. Always check your DC is actually up and running before troubleshooting LDAP connection errors.
+
+---
+
+### Invalid Credentials on ldapsearch
+
+Forgot the password set for the svc-osticket service account. Reset it on the DC using Set-ADAccountPassword and tried again.
+
+---
+
+### Access Denied After LDAP Connected
+
+LDAP authenticates users but doesn't automatically give them access inside osTicket. Had to create agent accounts inside osTicket and assign them departments and roles before they could log in.
+
+---
+
+### osTicket Plugin Download Returning 404
+
+The osTicket plugins repo has no formal releases so all release tag download URLs return 404. Fixed by downloading directly from the branch using curl instead of wget.
+
+---
+
+## What I Learned
+
+**LDAP authenticates but doesn't authorize.** This was the biggest thing I learned. Authentication means proving who you are — LDAP handles that by checking AD. Authorization means what you're allowed to do — osTicket handles that through roles and departments. They're two separate things and you need both set up for users to actually get in.
+
+**Test connectivity in layers.** When LDAP wasn't connecting I tested ping first, then used ldapsearch to test the actual LDAP bind directly on Ubuntu. Breaking it down step by step made it way easier to find exactly where the problem was instead of guessing.
+
+**Duplicate files cause conflicts.** Copying the LDAP2 library into multiple locations seemed like a good idea at the time but caused PHP to load it twice and crash the site. The lesson is to put files exactly where they need to go and nowhere else.
+
+**Always check the obvious stuff first.** The bind error turned out to be caused by a frozen DC — not a config issue at all. Before going deep into troubleshooting always make sure all your VMs are actually up and responding.
+
+**Read error messages carefully.** Every error in this phase told me exactly what was wrong if I slowed down and read it. The PHP error told me the exact file causing the conflict. The ldapsearch error said invalid credentials which told me immediately it was a password issue not a network issue. The errors are helpful if you actually read them.
 
 **update:** I was actually able to get it working.
 
@@ -278,23 +573,6 @@ This is something I plan to come back to and figure out as I continue building m
 5. Click **Add Host**
 
 Now you can reach osTicket at `http://osticket-srv.mydomain.com` from your Windows 10 VM.
-
----
-
-## Manual User Setup in osTicket
-
-Since I skipped LDAP integration, users and agents are created manually inside osTicket. This is straightforward and still lets me practice all the help desk workflows I want to.
-
-### Create Staff/Agent Accounts
-1. Log into `http://192.168.1.20/scp`
-2. Go to **Admin Panel → Agents → Add New Agent**
-3. Fill in name, email, username, and password
-4. Assign a department and role
-
-### Create End Users
-1. Go to **Admin Panel → Users → Add New User**
-2. Fill in name and email
-3. End users can submit tickets at `http://192.168.1.20`
 
 ---
 
